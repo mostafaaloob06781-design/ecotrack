@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}الإحصائيات{% endblock %}
+{% block content %}
+<h1>الأكل اللي اتنقذ</h1>
+<div class="kpis">
+  <div><strong>{{ s.meals }}</strong><span>وجبة اتنقذت من الهدر</span></div>
+  <div><strong>{{ reserved }}</strong><span>وجبة محجوزة</span></div>
+  <div><strong>{{ "%.0f"|format(s.saved) }} ج</strong><span>وفّرها المستفيدين</span></div>
+  <div><strong>{{ active }}</strong><span>عرض متاح الآن</span></div>
+  <div><strong>{{ restaurants }}</strong><span>مطعم مشترك</span></div>
+</div>
+<section class="panel">
+  <h2>الفائض الفعلي مقابل المتوقع (غداء، آخر 14 يوم)</h2>
+  <canvas id="chart" height="110" aria-label="رسم بياني للفائض الفعلي مقابل المتوقع"></canvas>
+</section>
+<section class="panel">
+  <h2>أداء نموذج الذكاء الاصطناعي</h2>
+  <div class="table-wrap"><table>
+    <tr><th>النموذج</th><th>MAE (وجبة)</th><th>R²</th></tr>
+    {% for name, m in metrics.items() %}<tr><td>{{ name }}</td><td>{{ m.MAE }}</td><td>{{ m.R2 }}</td></tr>{% endfor %}
+  </table></div>
+  <p class="muted">البيانات تجريبية (synthetic)، والتقييم على آخر 20% من الأيام.</p>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="/static/stats.js"></script>
+{% endblock %}

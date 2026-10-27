@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}EcoTrack{% endblock %} — EcoTrack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/">EcoTrack</a>
+  <nav>
+    <a href="/">العروض</a>
+    <a href="/stats">الإحصائيات</a>
+    {% if user %}
+      <a href="/dashboard">{{ "لوحة المطعم" if user.role == "restaurant" else "طلباتي" }}</a>
+      <form method="post" action="/logout" class="inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf(request) }}">
+        <button class="link" type="submit">خروج ({{ user.name }})</button>
+      </form>
+    {% else %}
+      <a href="/login">دخول</a>
+      <a class="btn small" href="/register">حساب جديد</a>
+    {% endif %}
+  </nav>
+</header>
+<main>{% block content %}{% endblock %}</main>
+<footer>EcoTrack — منصة لتقليل هدر الطعام</footer>
+{% block scripts %}{% endblock %}
+</body>
+</html>

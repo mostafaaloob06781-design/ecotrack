@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}لوحة المطعم{% endblock %}
+{% block content %}
+<h1>لوحة المطعم</h1>
+<div class="two">
+  <section class="panel">
+    <h2>توقع الفائض (AI)</h2>
+    <p class="muted">النموذج بيتوقع كام وجبة هتفضل، عشان تحضّر أقل.</p>
+    <form id="predict-form" class="stack">
+      <label>اليوم
+        <select name="day_of_week">{% for d in DAYS_AR %}<option value="{{ loop.index0 }}" {{ 'selected' if loop.index0 == (today + 1) % 7 }}>{{ d }}</option>{% endfor %}</select>
+      </label>
+      <label>نوع الوجبة
+        <select name="meal_type">{% for k, v in MEALS.items() %}<option value="{{ k }}">{{ v }}</option>{% endfor %}</select>
+      </label>
+      <label>الكمية المحضّرة <input type="number" name="prepared_qty" value="100" min="1" max="1000"></label>
+      <label class="check"><input type="checkbox" name="is_holiday"> إجازة أو امتحانات</label>
+      <button class="btn" type="submit">توقّع</button>
+    </form>
+    <p id="predict-result" class="result" hidden></p>
+  </section>
+  <section class="panel">
+    <h2>إضافة عرض</h2>
+    <form id="offer-form" method="post" action="/offers" class="stack">
+      <input type="hidden" name="csrf_token" value="{{ csrf(request) }}">
+      <label>اسم العرض <input name="title" required maxlength="100"></label>
+      <label>الوصف <input name="description" maxlength="500"></label>
+      <label>نوع الوجبة
+        <select name="meal_type">{% for k, v in MEALS.items() %}<option value="{{ k }}">{{ v }}</option>{% endfor %}</select>
+      </label>
+      <div class="row">
+        <label>الكمية <input type="number" name="qty" value="10" min="1" max="1000" required></label>
+        <label>السعر الأصلي <input type="number" name="original_price" value="30" min="0" step="0.5" required></label>
+      </div>
+      <label>موعد الاستلام النهائي <input type="datetime-local" name="pickup_by" value="{{ default_pickup }}" required></label>
+      <div class="row">
+        <label>الخصم % <input type="number" name="discount_pct" id="discount" value="40" min="0" max="100" required></label>
+        <button class="btn ghost" type="button" id="suggest-btn">اقتراح الخصم (AI)</button>
+      </div>
+      <p id="suggest-result" class="muted" hidden></p>
+      <button class="btn" type="submit">انشر العرض</button>
+    </form>
+  </section>
+</div>
+
+<h2>عروضي</h2>
+<div class="table-wrap"><table>
+  <tr><th>العرض</th><th>الكمية</th><th>الخصم</th><th>الاستلام قبل</th></tr>
+  {% for o in offers %}<tr><td>{{ o.title }}</td><td>{{ o.qty_left }} / {{ o.qty_total }}</td><td>{{ o.discount_pct }}%</td><td>{{ o.pickup_by[:16] }}</td></tr>
+  {% else %}<tr><td colspan="4" class="muted">لسه مفيش عروض</td></tr>{% endfor %}
+</table></div>
+
+<h2>الطلبات الواردة</h2>
+<div class="table-wrap"><table>
+  <tr><th>العرض</th><th>العميل</th><th>الكمية</th><th>الحالة</th><th></th></tr>
+  {% for r in orders %}<tr><td>{{ r.title }}</td><td>{{ r.customer }}</td><td>{{ r.qty }}</td><td>{{ STATUS[r.status] }}</td>
+    <td>{% if r.status == "reserved" %}
+      <form method="post" action="/orders/{{ r.id }}/status" class="inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf(request) }}">
+        <button class="btn small" name="status" value="collected">تم الاستلام</button>
+        <button class="btn small ghost" name="status" value="cancelled">إلغاء</button>
+      </form>{% endif %}</td></tr>
+  {% else %}<tr><td colspan="5" class="muted">مفيش طلبات</td></tr>{% endfor %}
+</table></div>
+{% endblock %}
+{% block scripts %}<script src="/static/restaurant.js" data-csrf="{{ csrf(request) }}"></script>{% endblock %}

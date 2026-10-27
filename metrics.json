@@ -1,0 +1,86 @@
+{
+  "rows_train": 640,
+  "rows_test": 160,
+  "models": {
+    "Linear Regression": {
+      "MAE": 2.72,
+      "R2": 0.586
+    },
+    "Random Forest": {
+      "MAE": 2.46,
+      "R2": 0.65
+    }
+  },
+  "chart_lunch": [
+    {
+      "date": "2026-07-09",
+      "actual": 21,
+      "predicted": 19.5
+    },
+    {
+      "date": "2026-07-10",
+      "actual": 13,
+      "predicted": 12.8
+    },
+    {
+      "date": "2026-07-11",
+      "actual": 19,
+      "predicted": 23.8
+    },
+    {
+      "date": "2026-07-12",
+      "actual": 7,
+      "predicted": 12.9
+    },
+    {
+      "date": "2026-07-13",
+      "actual": 14,
+      "predicted": 14.1
+    },
+    {
+      "date": "2026-07-14",
+      "actual": 11,
+      "predicted": 8.5
+    },
+    {
+      "date": "2026-07-15",
+      "actual": 11,
+      "predicted": 11.5
+    },
+    {
+      "date": "2026-07-16",
+      "actual": 18,
+      "predicted": 19.2
+    },
+    {
+      "date": "2026-07-17",
+      "actual": 15,
+      "predicted": 12.9
+    },
+    {
+      "date": "2026-07-18",
+      "actual": 20,
+      "predicted": 20.5
+    },
+    {
+      "date": "2026-07-19",
+      "actual": 18,
+      "predicted": 17.8
+    },
+    {
+      "date": "2026-07-20",
+      "actual": 14,
+      "predicted": 13.2
+    },
+    {
+      "date": "2026-07-21",
+      "actual": 10,
+      "predicted": 11.2
+    },
+    {
+      "date": "2026-07-22",
+      "actual": 9,
+      "predicted": 10.2
+    }
+  ]
+}

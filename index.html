@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <h1>أكل زايد النهارده، يبقى وجبة لحد النهارده</h1>
+  <p>المطاعم والكافيتريات بتعرض فائض الأكل بسعر مخفض، وانت تحجز وتستلم قبل ما يتهدر.</p>
+</section>
+<div class="filters">
+  <a class="chip {{ 'on' if not meal }}" href="/">الكل</a>
+  {% for k, v in MEALS.items() %}<a class="chip {{ 'on' if meal == k }}" href="{{ '/?meal=' ~ k }}">{{ v }}</a>{% endfor %}
+</div>
+{% if offers|length == 0 %}<p class="empty">مفيش عروض متاحة دلوقتي.</p>{% endif %}
+<div class="grid">
+{% for o in offers %}
+  {% set price = (o.original_price * (100 - o.discount_pct) / 100) %}
+  <article class="card">
+    <div class="tag">{{ MEALS[o.meal_type] }}</div>
+    <h3>{{ o.title }}</h3>
+    <p class="muted">{{ o.restaurant }}</p>
+    <p>{{ o.description }}</p>
+    <p class="price"><s>{{ "%.0f"|format(o.original_price) }}</s> <strong>{{ "%.2f"|format(price) }} ج</strong> <span class="off">-{{ o.discount_pct }}%</span></p>
+    <p class="muted">متبقي {{ o.qty_left }} وجبة · الاستلام قبل {{ o.pickup_by[11:16] }} ({{ o.pickup_by[:10] }})</p>
+    {% if user and user.role == "beneficiary" %}
+    <form method="post" action="/offers/{{ o.id }}/book" class="row">
+      <input type="hidden" name="csrf_token" value="{{ csrf(request) }}">
+      <input type="number" name="qty" value="1" min="1" max="{{ [5, o.qty_left]|min }}" aria-label="الكمية">
+      <button class="btn" type="submit">احجز</button>
+    </form>
+    {% elif not user %}<a class="btn ghost" href="/login">سجّل دخول عشان تحجز</a>{% endif %}
+  </article>
+{% endfor %}
+</div>
+{% endblock %}

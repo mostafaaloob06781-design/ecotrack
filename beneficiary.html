@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}طلباتي{% endblock %}
+{% block content %}
+<h1>طلباتي</h1>
+<div class="table-wrap"><table>
+  <tr><th>العرض</th><th>المطعم</th><th>الكمية</th><th>الإجمالي</th><th>الاستلام قبل</th><th>الحالة</th><th></th></tr>
+  {% for r in orders %}<tr><td>{{ r.title }}</td><td>{{ r.restaurant }}</td><td>{{ r.qty }}</td>
+    <td>{{ "%.2f"|format(r.qty * r.original_price * (100 - r.discount_pct) / 100) }} ج</td>
+    <td>{{ r.pickup_by[:16] }}</td><td>{{ STATUS[r.status] }}</td>
+    <td>{% if r.status == "reserved" %}<form method="post" action="/orders/{{ r.id }}/status" class="inline">
+      <input type="hidden" name="csrf_token" value="{{ csrf(request) }}">
+      <button class="btn small ghost" name="status" value="cancelled">إلغاء الحجز</button></form>{% endif %}</td></tr>
+  {% else %}<tr><td colspan="7" class="muted">لسه معملتش حجز. <a href="/">شوف العروض</a></td></tr>{% endfor %}
+</table></div>
+{% endblock %}

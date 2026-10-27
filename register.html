@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}حساب جديد{% endblock %}
+{% block content %}
+<section class="narrow">
+  <h1>حساب جديد</h1>
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  <form method="post" class="stack">
+    <input type="hidden" name="csrf_token" value="{{ csrf(request) }}">
+    <label>الاسم <input name="name" required maxlength="80"></label>
+    <label>الإيميل <input type="email" name="email" required autocomplete="email"></label>
+    <label>كلمة المرور (8 على الأقل، حروف وأرقام) <input type="password" name="password" required minlength="8" autocomplete="new-password"></label>
+    <label>نوع الحساب
+      <select name="role" required>
+        <option value="beneficiary">مستفيد (عايز أحجز أكل)</option>
+        <option value="restaurant">مطعم / كافيتريا</option>
+      </select>
+    </label>
+    <button class="btn" type="submit">إنشاء الحساب</button>
+  </form>
+</section>
+{% endblock %}
